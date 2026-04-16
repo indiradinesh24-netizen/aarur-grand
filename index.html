@@ -1163,9 +1163,11 @@ async function initStorage() {
     } catch(e) {
       console.warn('Firebase init failed, using localStorage:', e);
       db = null;
+      setDbStatus('🔴 Offline', 'var(--red)');
     }
   }
   loadFromLocal();
+  renderAll();
 }
 
 // Attach Firestore real-time listener.
@@ -2308,8 +2310,8 @@ document.addEventListener('click', function(e) {
 });
 
 const _wam = document.getElementById('waModal'); if(_wam) _wam.addEventListener('click', function(e){ if(e.target===this) closeWaModal(); });
-document.getElementById('waDaysBefore').addEventListener('change', buildWaMessage);
-document.getElementById('waOwnerPhone').addEventListener('input', buildWaMessage);
+const _wadb = document.getElementById('waDaysBefore'); if(_wadb) _wadb.addEventListener('change', buildWaMessage);
+const _waop = document.getElementById('waOwnerPhone'); if(_waop) _waop.addEventListener('input', buildWaMessage);
 
 /* ════════════════════════════════════════════════════════
    WHATSAPP ALERT MODULE
