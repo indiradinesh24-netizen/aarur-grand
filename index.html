@@ -397,7 +397,7 @@ main {
   width: 4px; background: var(--gold);
   border-radius: 4px 0 0 4px;
 }
-.booking-card.status-confirmed::before { background: var(--green); }
+.booking-card.status-completed::before { background: var(--green); }
 .booking-card.status-pending::before   { background: var(--gold); }
 .booking-card.status-cancelled::before { background: var(--red); }
 
@@ -447,7 +447,7 @@ main {
   font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.5px;
 }
-.badge-confirmed { background: rgba(76,175,128,0.15); color: var(--green); border: 1px solid rgba(76,175,128,0.3); }
+.badge-confirmed, .badge-completed { background: rgba(76,175,128,0.15); color: var(--green); border: 1px solid rgba(76,175,128,0.3); }
 .badge-pending   { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid var(--border); }
 .badge-cancelled { background: rgba(224,85,85,0.12);  color: var(--red);  border: 1px solid rgba(224,85,85,0.3); }
 .toggle-btn {
@@ -709,7 +709,57 @@ main {
 .rpt-pay-entry { font-size:11px; color:var(--muted); line-height:1.7; }
 .rpt-pay-entry span { color:var(--green); font-weight:600; }
 .rpt-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:700; text-transform:uppercase; }
-.rpt-badge.confirmed { background:rgba(76,175,128,0.15); color:var(--green); border:1px solid rgba(76,175,128,0.3); }
+.rpt-badge.completed { background:rgba(76,175,128,0.15); color:var(--green); border:1px solid rgba(76,175,128,0.3); }
+.whatsapp-btn {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff !important;
+  border: none !important;
+  font-weight: 700 !important;
+}
+.whatsapp-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* WhatsApp Modal */
+.wa-modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.72);
+  display: none; align-items: center; justify-content: center;
+}
+.wa-modal-overlay.open { display: flex; }
+.wa-modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 30px;
+  width: 540px; max-width: 96vw;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+.wa-modal h2 { font-family:'Playfair Display',serif; font-size:18px; color:var(--gold-light); margin-bottom:18px; }
+.wa-preview {
+  background: rgba(37,211,102,0.07);
+  border: 1px solid rgba(37,211,102,0.25);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 13px; line-height: 1.75;
+  color: var(--text); white-space: pre-wrap;
+  margin-bottom: 16px; font-family: monospace;
+}
+.wa-owner-row {
+  display: flex; gap: 10px; align-items: flex-end; margin-bottom: 14px;
+}
+.wa-owner-row .form-group { flex: 1; margin-bottom: 0; }
+.wa-days-row { display:flex; gap:10px; margin-bottom:14px; }
+.wa-days-row .form-group { flex:1; margin-bottom:0; }
+.wa-send-btn {
+  width:100%; padding:13px;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  border:none; border-radius: var(--radius-lg);
+  color:#fff; font-family:'DM Sans',sans-serif;
+  font-size:14px; font-weight:700; cursor:pointer;
+  box-shadow:0 4px 18px rgba(37,211,102,0.3);
+  transition: all 0.2s; margin-top:4px;
+}
+.wa-send-btn:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(37,211,102,0.45); }
 .rpt-badge.pending   { background:rgba(201,168,76,0.12); color:var(--gold); border:1px solid var(--border); }
 .rpt-badge.cancelled { background:rgba(224,85,85,0.12); color:var(--red); border:1px solid rgba(224,85,85,0.3); }
 .rpt-empty { text-align:center; padding:40px; color:var(--muted); font-size:14px; }
@@ -866,7 +916,7 @@ main {
     <div class="summary-cards">
       <div class="scard"><div class="sc-val" id="scTotal">₹0</div><div class="sc-lbl">Total Revenue</div><div class="sc-sub">All active bookings</div></div>
       <div class="scard"><div class="sc-val" id="scPending">₹0</div><div class="sc-lbl">Balance Due</div><div class="sc-sub">Pending payments</div></div>
-      <div class="scard"><div class="sc-val" id="scConfirmed">0</div><div class="sc-lbl">Confirmed</div><div class="sc-sub">Booking count</div></div>
+      <div class="scard"><div class="sc-val" id="scConfirmed">0</div><div class="sc-lbl">Completed</div><div class="sc-sub">Booking count</div></div>
       <div class="scard"><div class="sc-val" id="scUpcoming">0</div><div class="sc-lbl">Upcoming</div><div class="sc-sub">Next 30 days</div></div>
     </div>
 
@@ -894,7 +944,7 @@ main {
       <div class="filter-bar">
         <button class="filter-btn active" onclick="setFilter('all',this)">Upcoming</button>
         <button class="filter-btn" onclick="setFilter('pending',this)">Pending</button>
-        <button class="filter-btn" onclick="setFilter('confirmed',this)">Confirmed</button>
+        <button class="filter-btn" onclick="setFilter('completed',this)">Completed</button>
         <button class="filter-btn" onclick="setFilter('cancelled',this)">Cancelled</button>
         <button class="filter-btn" onclick="setFilter('past',this)">Past</button>
       </div>
@@ -957,7 +1007,7 @@ main {
           <label>Status</label>
           <select id="eStatus">
             <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
+            <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
           </select>
         </div>
@@ -1555,7 +1605,7 @@ function renderStats() {
   const totalRev  = active.reduce((s,b) => s + (b.total || 0), 0);
   const totalPaid = active.reduce((s,b) => s + getPaid(b), 0);
   const totalBal  = totalRev - totalPaid;
-  const confirmed = bookings.filter(b => b.status === 'confirmed').length;
+  const confirmed = bookings.filter(b => b.status === 'completed').length;
   const now = new Date(), in30 = new Date(now);
   in30.setDate(now.getDate() + 30);
   const upcoming = bookings.filter(b => {
@@ -1809,6 +1859,7 @@ function renderBookings() {
         <div class="bc-actions">
           <button class="bc-btn add-payment-btn" data-action="payment" data-id="${safeId}">💳 Add Payment</button>
           <button class="bc-btn invoice-btn" data-action="invoice" data-id="${safeId}">📄 Generate Invoice</button>
+          <button class="bc-btn whatsapp-btn" data-action="whatsapp" data-id="${safeId}">📲 WhatsApp Alert</button>
           <button class="bc-btn" data-action="edit" data-id="${safeId}">✏️ Edit</button>
           <button class="bc-btn danger" data-action="delete" data-id="${safeId}">🗑️ Delete</button>
         </div>
@@ -1922,10 +1973,10 @@ function generateInvoice(id) {
   const bookDate    = new Date(b.date + 'T00:00:00').toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });
   const balance     = (b.total || 0) - getPaid(b);
 
-  const statusColor = b.status === 'confirmed' ? C.green
+  const statusColor = (b.status === 'confirmed' || b.status === 'completed') ? C.green
                     : b.status === 'cancelled'  ? C.red
                     : C.amber;
-  const statusBg    = b.status === 'confirmed' ? C.greenBg
+  const statusBg    = (b.status === 'confirmed' || b.status === 'completed') ? C.greenBg
                     : b.status === 'cancelled'  ? C.redBg
                     : C.amberBg;
 
@@ -2248,13 +2299,108 @@ document.addEventListener('click', function(e) {
   const id     = el.getAttribute('data-id');
   if (!action || !id) return;
   e.stopPropagation();
-  if (action === 'toggle')  { toggleCard(id); }
-  if (action === 'payment') { openPaymentModal(id); }
-  if (action === 'invoice') { generateInvoice(id); }
-  if (action === 'edit')    { openEdit(id); }
-  if (action === 'delete')  { deleteBooking(id); }
+  if (action === 'toggle')    { toggleCard(id); }
+  if (action === 'payment')   { openPaymentModal(id); }
+  if (action === 'invoice')   { generateInvoice(id); }
+  if (action === 'whatsapp')  { openWaModal(id); }
+  if (action === 'edit')      { openEdit(id); }
+  if (action === 'delete')    { deleteBooking(id); }
 });
 
+const _wam = document.getElementById('waModal'); if(_wam) _wam.addEventListener('click', function(e){ if(e.target===this) closeWaModal(); });
+document.getElementById('waDaysBefore').addEventListener('change', buildWaMessage);
+document.getElementById('waOwnerPhone').addEventListener('input', buildWaMessage);
+
+/* ════════════════════════════════════════════════════════
+   WHATSAPP ALERT MODULE
+════════════════════════════════════════════════════════ */
+
+function openWaModal(id) {
+  const b = bookings.find(b => String(b.id) === String(id));
+  if (!b) return;
+  document.getElementById('waBookingId').value = b.id;
+  // Pre-fill owner number if saved
+  const saved = localStorage.getItem('waOwnerPhone');
+  if (saved) document.getElementById('waOwnerPhone').value = saved;
+  buildWaMessage();
+  document.getElementById('waModal').classList.add('open');
+}
+
+function closeWaModal() {
+  document.getElementById('waModal').classList.remove('open');
+}
+
+function buildWaMessage() {
+  const id = document.getElementById('waBookingId').value;
+  const b  = bookings.find(b => String(b.id) === String(id));
+  if (!b) return;
+
+  const paid       = getPaid(b);
+  const balance    = (b.total || 0) - paid;
+  const daysBefore = parseInt(document.getElementById('waDaysBefore').value, 10);
+  const inclBill   = document.getElementById('waIncludeBill').value === 'yes';
+
+  // Format event date
+  const evDate = new Date(b.date + 'T00:00:00');
+  const evDateStr = evDate.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  // Days-before context
+  const reminderNote = daysBefore === 0
+    ? '🗓️ *Event Day Reminder*'
+    : `⏰ *${daysBefore}-Day Advance Reminder*`;
+
+  let msg = `🏛️ *Aarur Grand — Booking Alert*\n`;
+  msg += `${reminderNote}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `👤 *Client:* ${b.name}\n`;
+  msg += `🎉 *Event:* ${b.event}\n`;
+  msg += `📅 *Date:* ${evDateStr}\n`;
+  msg += `⏰ *Session:* ${b.session}\n`;
+  if (b.guests) msg += `👥 *Guests:* ${b.guests}\n`;
+  if (b.phone)  msg += `📞 *Phone:* ${b.phone}\n`;
+  msg += `📌 *Status:* ${(b.status || 'pending').toUpperCase()}\n`;
+
+  if (inclBill) {
+    msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `💰 *Bill Estimation*\n`;
+    if (b.hallRent   > 0) msg += `  🏛️ Hall Rent:      ₹${Number(b.hallRent).toLocaleString('en-IN')}\n`;
+    if (b.cleaning   > 0) msg += `  🧹 Cleaning:       ₹${Number(b.cleaning).toLocaleString('en-IN')}\n`;
+    if (b.tableCharge> 0) msg += `  🪑 Table Charge:   ₹${Number(b.tableCharge).toLocaleString('en-IN')}\n`;
+    if (b.decoration > 0) msg += `  🎀 Decoration:     ₹${Number(b.decoration).toLocaleString('en-IN')}\n`;
+    if (b.ebCharge   > 0) msg += `  ⚡ EB Charge:      ₹${Number(b.ebCharge).toLocaleString('en-IN')} (${b.ebUnits} units × ₹${b.ebRate})\n`;
+    if (b.other      > 0) msg += `  📋 Other:          ₹${Number(b.other).toLocaleString('en-IN')}\n`;
+    msg += `━━━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `💳 *Total Bill:*   ₹${Number(b.total || 0).toLocaleString('en-IN')}\n`;
+    msg += `✅ *Amount Paid:*  ₹${Number(paid).toLocaleString('en-IN')}\n`;
+    if (balance > 0) {
+      msg += `🔴 *Balance Due:*  ₹${Number(balance).toLocaleString('en-IN')}\n`;
+      msg += `\n⚠️ Kindly arrange balance payment before the event.\n`;
+    } else {
+      msg += `🟢 *Balance Due:*  ₹0 — Fully Paid ✅\n`;
+    }
+  }
+
+  if (b.notes) msg += `\n📝 *Notes:* ${b.notes}\n`;
+  msg += `\n_Aarur Grand Booking System_`;
+
+  document.getElementById('waPreview').textContent = msg;
+}
+
+function openWhatsApp() {
+  const phone = document.getElementById('waOwnerPhone').value.trim().replace(/\D/g,'');
+  if (!phone || phone.length < 10) {
+    alert('Please enter a valid WhatsApp number with country code (e.g. 919876543210)');
+    return;
+  }
+  // Save owner phone for next time
+  localStorage.setItem('waOwnerPhone', document.getElementById('waOwnerPhone').value.trim());
+
+  const msg = document.getElementById('waPreview').textContent;
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  closeWaModal();
+  showToast('WhatsApp opened! Send the message to the owner.', 'success');
+}
 
 /* ════════════════════════════════════════════════════════
    REPORT MODULE
@@ -2297,7 +2443,7 @@ function getReportBookings() {
         const d = new Date(b.date); return d.getFullYear()===y && d.getMonth()===(m-1);
       });
     }
-  } else if (filter === 'pending' || filter === 'confirmed' || filter === 'cancelled') {
+  } else if (filter === 'pending' || filter === 'completed' || filter === 'cancelled') {
     list = list.filter(b => b.status === filter);
   }
 
@@ -2386,7 +2532,7 @@ function downloadReportPDF() {
   doc.setTextColor(240,208,120); doc.setFont('helvetica','bold'); doc.setFontSize(14);
   doc.text('Aarur Grand — Booking & Payment Report', ML+8, 13);
   doc.setTextColor(160,130,60); doc.setFont('helvetica','normal'); doc.setFontSize(8);
-  const filterLabel = { all:'All Bookings','this-month':'This Month','last-month':'Last Month',custom:'Custom Month',pending:'Pending',confirmed:'Confirmed',cancelled:'Cancelled' };
+  const filterLabel = { all:'All Bookings','this-month':'This Month','last-month':'Last Month',custom:'Custom Month',pending:'Pending',completed:'Completed',cancelled:'Cancelled' };
   doc.text(`Filter: ${filterLabel[filter]||filter}   |   Generated: ${now.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})} ${now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}   |   Total: ${list.length} bookings`, ML+8, 19);
 
   // ── Summary row ──
@@ -2455,7 +2601,7 @@ function downloadReportPDF() {
       { val:b.date||'—',               color:[70,50,18]   },
       { val:b.session||'—',            color:[70,50,18]   },
       { val:b.event||'—',              color:[70,50,18]   },
-      { val:(b.status||'pending').toUpperCase(), color: b.status==='confirmed'?[39,128,80]:b.status==='cancelled'?[180,50,50]:[160,110,20] },
+      { val:(b.status||'pending').toUpperCase(), color: b.status==='completed'?[39,128,80]:b.status==='cancelled'?[180,50,50]:[160,110,20] },
       { val:'Rs.'+Number(b.total||0).toLocaleString('en-IN'),   color:[60,40,14]  },
       { val:'Rs.'+Number(paid).toLocaleString('en-IN'),          color:[39,128,80] },
       { val:'Rs.'+Number(balance).toLocaleString('en-IN'),       color:balance>0?[180,50,50]:[39,128,80] },
@@ -2522,6 +2668,52 @@ initStorage(); // loads data (Firebase or localStorage) then calls renderAll
 </script>
 
 <!-- ══════════════════════════════════
+     WHATSAPP ALERT MODAL
+══════════════════════════════════ -->
+<div class="wa-modal-overlay" id="waModal">
+  <div class="wa-modal">
+    <h2>📲 Send WhatsApp Alert to Owner</h2>
+    <input type="hidden" id="waBookingId">
+
+    <div class="wa-owner-row">
+      <div class="form-group">
+        <label>Owner WhatsApp Number (with country code)</label>
+        <input type="tel" id="waOwnerPhone" placeholder="e.g. 919876543210" value="91">
+      </div>
+    </div>
+
+    <div class="wa-days-row">
+      <div class="form-group">
+        <label>Days Before Event for Reminder</label>
+        <select id="waDaysBefore">
+          <option value="7">7 days before</option>
+          <option value="5">5 days before</option>
+          <option value="3" selected>3 days before</option>
+          <option value="2">2 days before</option>
+          <option value="1">1 day before</option>
+          <option value="0">Today (event day)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Include Balance Bill?</label>
+        <select id="waIncludeBill" onchange="buildWaMessage()">
+          <option value="yes" selected>Yes – include balance details</option>
+          <option value="no">No – just reminder</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-bottom:10px">📋 Message Preview</div>
+    <div class="wa-preview" id="waPreview"></div>
+
+    <button class="wa-send-btn" onclick="openWhatsApp()">📲 Open WhatsApp & Send</button>
+    <div class="modal-actions" style="margin-top:12px">
+      <button class="btn-cancel" onclick="closeWaModal()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
      REPORT MODAL
 ══════════════════════════════════ -->
 <div class="modal-overlay" id="reportModal">
@@ -2535,7 +2727,7 @@ initStorage(); // loads data (Firebase or localStorage) then calls renderAll
         <option value="last-month">Last Month</option>
         <option value="custom">Custom Month</option>
         <option value="pending">Pending Only</option>
-        <option value="confirmed">Confirmed Only</option>
+        <option value="completed">Completed Only</option>
         <option value="cancelled">Cancelled Only</option>
       </select>
       <input type="month" id="rptMonth" style="display:none">
